@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Jua&family=Roboto+Condensed:ital,wght@1,700&family=Roboto+Mono:ital,wght@1,100;1,200&display=swap" rel="stylesheet">
+
+
+    <title>장성준 소개합니다</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
+          rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        #homebnt {
+            background-color: rgba(255,255,255,0);
+            font-weight: bold;
+            font-size: 25px;
+            color: black;
+
+            border: none;
+            margin-left: 10px;
+        }
+
+        .mylayout {
+            width: auto;
+            background-color: #fde7e7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mylayout > img{
+            width: 250px;
+            height: 300px;
+            border-radius: 10px;
+            margin-top: 50px;
+            margin-bottom: 10px;
+        }
+
+
+        .myprofile {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .myprofile > h1 {
+            font-family: 'Jua', sans-serif;
+
+        }
+
+        .myprofile > button {
+            width: 120px;
+            height: 40px;
+            border-radius: 5px;
+            border: 3px solid white;
+            color: white;
+            background-color: black;
+            margin: auto;
+        }
+
+        .myprofile > button:hover {
+            border: 2px solid white;
+        }
+
+        table td {
+            padding-right: 30px;
+            padding-bottom: 5px;
+            font-family: 'Jua', sans-serif;
+            font-size: 18px;
+        }
+
+
+        .mypost {
+            width: 95%;
+            max-width: 400px;
+            margin: 20px auto 20px auto;
+
+            box-shadow: 0px 0px 3px 0px black;
+            padding: 10px;
+            background-color: white;
+            border-radius: 10px;
+
+            display: none;
+        }
+
+        .mypost > button {
+            margin-top: 10px;
+        }
+
+        .mycards {
+            width: 95%;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .mycards > .card {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            show_comment()
+        });
+
+
+        function save_comment() {
+            let name = $('#name').val()
+            let comment = $('#comment').val()
+
+            if (name == '' || comment == '') alert('이름과 할 말을 모두 입력하세요')
+            else {
+            $.ajax({
+                type: 'POST',
+                url: '/coosepost',
+                data: {user:'jun', name_give: name, comment_give: comment},
+                success: function (response) {
+
+                    console.log(response)
+                    window.location.reload()
+                }
+            })
+            }
+        }
+
+        function show_comment(search_name) {
+            $('#comment-list').empty()
+            $.ajax({
+                type: "GET",
+                url: "/cooseget",
+                data: {user:'jun',search_name:search_name},
+                success: function (response) {
+                    let rows = response['comment_list']
+                    for (let i= 0; i < rows.length; i++){
+                        let name = rows[i]['name']
+                        let comment = rows[i]['comment']
+                        let temp_html = `<div class="card">
+                                            <div class="card-body">
+                                                <blockquote class="blockquote mb-0">
+                                                    <p>${comment}</p>
+                                                    <footer class="blockquote-footer">${name}</footer>
+                                                </blockquote>
+                                            </div>
+                                        </div>`
+                        $('#comment-list').append(temp_html)
+                        console.log(rows)
+                    }
+                }
+            });
+        }
+
+        function postshow(){
+            $('#disppost').show()
+        }
+
+        function postclose(){
+            $('#disppost').hide()
+        }
+
+        function search(){
+            let search_name = $('#search').val()
+            show_comment(search_name)
+        }
+
+    </script>
+</head>
+<body style="background-color: #fde7e7">
+<button id="homebnt" onclick="location.href='/'">HOME</button>
+<div class="mylayout">
+    <img src="../static/seongjun.jpg" alt="사진">
+    <div class="myprofile">
+        <h1 style="margin: auto">장성준</h1>
+        <hr>
+        <table>
+        <tr>
+            <td>지금 하는 일</td>
+            <td>취업준비</td>
+        </tr>
+        <tr>
+            <td>TMI</td>
+            <td>istp</td>
+        </tr>
+        <tr>
+            <td>나의 장점</td>
+            <td>차분하다, 신중하다</td>
+        </tr>
+        <tr>
+            <td>협업시 스타일</td>
+            <td>할 수 있는 역할 분담 확실히 하기</td>
+        </tr>
+        <tr>
+            <td>취미</td>
+            <td>드라마/유뷰브 보기</td>
+        </tr>
+        <tr>
+            <td>Blog</td>
+            <td><a href="https://ace-jun.tistory.com/" target="_blank">블로그 보기</a></td>
+        </tr>
+        </table>
+        <hr>
+        <input type="text" class="form-control" id="search">
+        <br>
+        <button style="width: 160px" onclick="search()">방명록 이름 검색</button>
+        <hr>
+        <button onclick="postshow()">방명록 열기</button>
+    </div>
+
+</div>
+<div class="mypost" id="disppost">
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="name" placeholder="url">
+        <label for="floatingInput">닉네임</label>
+    </div>
+    <div class="form-floating">
+<textarea class="form-control" placeholder="Leave a comment here" id="comment"
+          style="width: 100%" ></textarea>
+        <label for="floatingTextarea2">방명록</label>
+    </div>
+    <button onclick="save_comment()" type="button" class="btn btn-dark">방명록 남기기</button>
+    <button onclick="postclose()" type="button" class="btn btn-dark">방명록 닫기</button>
+</div>
+<div class="mycards" id="comment-list">
+</div>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Jua&family=Roboto+Condensed:ital,wght@1,700&family=Roboto+Mono:ital,wght@1,100;1,200&display=swap"
+          rel="stylesheet">
+
+    <link rel="shortcut icon" href="static/yy1.png">
+    <title>조용연 자기소개</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .myform {
+            width: auto;
+            height: 800px;
+            background-color: deepskyblue;
+            font-size: larger;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .myform > img {
+            margin-left: 100px;
+            width: 400px;
+            height: 400px;
+            border-radius: 300px;
+            border: 10px solid white;
+            color: white;
+        }
+
+
+        .myprofile > button {
+            width: 150px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid white;
+            color: white;
+            background-color: black;
+        }
+
+        .myprofile > button:hover {
+            border: 3px solid blue;
+        }
+
+        .guestbook {
+            width: 95%;
+            max-width: 400px;
+            margin: 20px auto 20px auto;
+
+            box-shadow: 0px 0px 20px 0px black;
+            padding: 10px;
+            background-color: white;
+            border-radius: 10px;
+
+            display: none;
+        }
+
+        .guestbook > button {
+            margin-top: 10px;
+        }
+
+        .mycards {
+            width: 95%;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .mycards > .card {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            show_comment()
+        });
+
+
+        function save_comment() {
+            let name = $('#name').val()
+            let comment = $('#comment').val()
+
+            if (name == '' || comment == '') alert('닉네임과 내용을 모두 입력해주세요.')
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: '/cooseproject',
+                    data: {name_give: name, comment_give: comment},
+                    success: function (response) {
+
+                        console.log(response)
+                        window.location.reload()
+                    }
+                })
+            }
+        }
+
+        function show_comment() {
+            $('#comment-list').empty()
+            $.ajax({
+                type: "GET",
+                url: "/cooseget",
+                data: {user:'eli'},
+                success: function (response) {
+                    let rows = response['comment_list']
+                    for (let i = 0; i < rows.length; i++) {
+                        let name = rows[i]['name']
+                        let comment = rows[i]['comment']
+                        let temp_html = `<div class="card">
+                                            <div class="card-body">
+                                                <blockquote class="blockquote mb-0">
+                                                    <p>${comment}</p>
+                                                    <footer class="blockquote-footer">${name}</footer>
+                                                </blockquote>
+                                            </div>
+                                        </div>`
+                        $('#comment-list').append(temp_html)
+                    }
+                }
+            });
+        }
+
+        function postshow() {
+            $('#guestbook').show()
+        }
+
+        function posthide() {
+            $('#guestbook').hide()
+        }
+
+    </script>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #main {
+            background-color: deepskyblue;
+            color: #fff;
+            font-size: 80px;
+            height: 10%;
+            text-align: center;
+            padding: 5%;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/typewriter-effect@2.3.1/dist/core.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var text = document.getElementById("typeStyle");
+
+            var typewriter = new Typewriter(text, {
+                loop: true
+            });
+
+            typewriter.typeString('Welcome to ELI page!')
+                .pauseFor(2000)
+                .deleteAll()
+                .start();
+
+        });
+    </script>
+
+</head>
+<body style="background-color: deepskyblue">
+<h3 onclick=location.href='/'>👈 A반 10조 다른멤버 보러가기</h3>
+
+<div id="main">
+    <div id="typeStyle"></div>
+</div>
+
+<div class="myform">
+    <img src="../static/elicho.jpg">
+    <div class="myprofile">
+        <h1><b>조용연</b></h1>
+        <hr>
+        <b>
+            <li>사는지역 : 인천</li>
+            <li>나의 장점 : 웃음이 많고 편안한 분위기 😄</li>
+            <li>mbti : INFP</li>
+            <li>협업시 스타일 : 맡은 역할은 끝까지 책임지고 완성하기!</li>
+            <li>취미 : 볼링, 등산, netflix</li>
+            <li><a href="https://elicho91.tistory.com/" target="_blank">블로그로 이동하기🤞</a></li>
+            <hr>
+        </b>
+        <button onclick="postshow()">방명록 열기 📘</button>
+    </div>
+
+</div>
+<div class="guestbook" id="guestbook">
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="name" placeholder="url">
+        <label for="floatingInput">닉네임</label>
+    </div>
+    <div class="form-floating">
+<textarea class="form-control" placeholder="Leave a comment here" id="comment"
+          style="width: 100%"></textarea>
+        <label for="floatingTextarea2">내용</label>
+    </div>
+    <button onclick="save_comment()" type="button" class="btn btn-dark">등록</button>
+    <button onclick="posthide()" type="button" class="btn btn-dark">닫기</button>
+</div>
+<div class="mycards" id="comment-list">
+</div>
+
+</body>
+</html>

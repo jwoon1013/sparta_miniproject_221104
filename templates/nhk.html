@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <meta charset="UTF-8">
+    <title>Spring A반 10조 쿠스 김남훈</title>
+    <!-- 이 아래로 : 구글 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@500&display=swap"
+          rel="stylesheet">
+    <!-- 이 위로 : 구글 폰트 -->
+
+    <style>
+
+        h1, h2, h3, a {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        * {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        a:link {
+            text-decoration-line: none;
+            color: blue;
+        }
+
+        a:visited {
+            text-decoration-line: none;
+            color: black;
+        }
+
+        a:hover {
+            text-decoration-line: none;
+            color: silver;
+        }
+
+        a:active {
+            text-decoration-line: none;
+            color: gray;
+
+        }
+
+        .nhk_title {
+            width: 100%;
+            height: 15vh;
+
+            background-color: white;
+
+            color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nhk_profile {
+            width: 100%;
+            height: 450px;
+
+            background-color: white;
+
+            color: black;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        .nhk_profile > img {
+            border-radius: 90%;
+        }
+
+        .nhk_table {
+            background-color: white;
+            color: black;
+            font-size: large;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        table {
+            border: 1px;
+            border-style: solid;
+            margin: 20px 20px;
+
+        }
+
+        td {
+            border: 1px;
+            border-style: solid;
+            padding: 10px 10px;
+
+        }
+
+        .nhk_button {
+            background-color: white;
+            width: 100%;
+            height: 80px;
+
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nhk_button > button {
+            width: 200px;
+            height: 50px;
+
+            background-color: transparent;
+            color: black;
+
+            border-radius: 50px;
+            border: 1px solid black;
+
+            margin-bottom: 10px;
+
+
+        }
+
+        .nhk_button > button:hover {
+            border: 3px solid gray;
+        }
+
+
+        .nhk_postpage {
+            background-color: white;
+            padding-bottom: 20px;
+        }
+
+        .nhk_post {
+            border-radius: 5px;
+            background-color: white;
+            width: 95%;
+            max-width: 50vh;
+            margin: 0px auto 0px auto;
+
+            box-shadow: 0px 0px 3px 0px black;
+            padding: 20px;
+        }
+
+        .nhk_post > button {
+            margin-top: 15px;
+        }
+
+
+        .nhk_comments {
+            background-color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 30vh;
+        }
+
+        .nhk_comment {
+            border-radius: 5px;
+            background-color: white;
+            width: 95%;
+            max-width: 700px;
+            margin-bottom: 10px;
+
+            box-shadow: 0px 0px 3px 0px black;
+            padding: 20px;
+        }
+
+        .nhk_comment > .comment-body {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            nhk_show()
+            close_commets_page()
+        });
+
+        function nhk_post() {
+            let nhk_nickname = $('#name').val()
+            let nhk_comment = $('#comment').val()
+
+            if (nhk_nickname == '' && nhk_comment == '') {
+                alert('닉네임과 방명록 메세지를 입력하세요')
+            } else if (nhk_comment == '') {
+                alert('방명록 메세지를 입력하세요')
+            } else if (nhk_nickname == '') {
+                alert('닉네임을 입력하세요')
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/coosepost",
+                    data: {user:'nhk', name_give: nhk_nickname, comment_give: nhk_comment},
+                    success: function (response) {
+                        alert(response['msg'])
+                        window.location.reload()
+                    }
+                })
+            }
+        }
+
+        function nhk_show() {
+            $.ajax({
+                type: "GET",
+                url: "/cooseget",
+                data: {user:'nhk'},
+                success: function (response) {
+                    let rows = response['comment_list']
+                    for (let i = 0; i < rows.length; i++) {
+                        let nickname = rows[i]['name']
+                        let comment = rows[i]['comment']
+
+                        let temp_html = `<div class="nhk_comment">
+                                            <div class="comment-body">
+                                                <blockquote class="blockquote mb-0">
+                                                    <p>${comment}</p>
+                                                    <footer class="blockquote-footer">${nickname}</footer>
+                                                </blockquote>
+                                            </div>
+                                        </div>`
+                        $('#comment-list').append(temp_html)
+                    }
+                }
+            });
+        }
+
+        function open_commets_page() {
+            $('#nhk_postpage').show()
+        }
+
+        function close_commets_page() {
+            $('#nhk_postpage').hide()
+        }
+
+    </script>
+
+</head>
+<body>
+<h3 onclick=location.href='/'>&nbsp👉쿠스 메인👈</h3>
+<div class="nhk_title">
+    <h1>5년 내 GDE</h1>
+</div>
+<div class="nhk_profile">
+    <h1><img src="https://thumb.mt.co.kr/06/2014/02/2014020414202535761_1.jpg/dims/optimize/" width="400px"
+             height="400px" style="border-radius: 0%"></h1>
+    <h2>NamHoon KIm</h2>
+
+    <h3><a href="https://i-kemen.tistory.com/" target="_blank">소통해요~</a></h3>
+</div>
+<div class="nhk_table">
+    <table>
+        <tr align="center">
+            <td>
+                이력
+            </td>
+            <td>구매팀 2년 근무</td>
+
+        </tr>
+        <tr align="center">
+            <td>
+                mbti
+            </td>
+            <td>ISTJ</td>
+        </tr>
+        <tr align="center">
+            <td>
+                나의장점
+            </td>
+            <td>계획을 잘 짬</td>
+        </tr>
+        <tr align="center">
+            <td>
+                협업시 스타일
+            </td>
+            <td>추진력과 결정력</td>
+        </tr>
+        <tr align="center">
+            <td>
+                취미
+            </td>
+            <td>요리하기, IT리뷰 쓰기</td>
+        </tr>
+    </table>
+</div>
+<div class="nhk_button">
+    <button onclick="open_commets_page()">방명록 열기</button>
+</div>
+
+<div class="nhk_postpage" id="nhk_postpage">
+    <div class="nhk_post">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="name" placeholder="url">
+            <label for="floatingInput">닉네임</label>
+        </div>
+        <div class="form-floating">
+<textarea class="form-control" placeholder="Leave a comment here" id="comment"
+          style="height: 100px"></textarea>
+            <label for="floatingTextarea2">방명록 메세지를 남겨주세요</label>
+        </div>
+        <button onclick="nhk_post()" type="button" class="btn btn-dark">남기기</button>
+        <button onclick="close_commets_page()" type="button" class="btn btn-outline-dark">닫기</button>
+    </div>
+</div>
+<div class="nhk_comments" id="comment-list">
+    <!-- 여기에 DB에서 넘어온 메세지들이 들어옵니다! -->
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css">
+
+    <link rel="stylesheet" href="../static/syj/syjcss.css" type="text/css">
+
+    <title>Introduce 정성윤</title>
+
+    <script>
+        $(document).ready(function () {
+            show_comment()
+        });
+
+
+        function save_comment() {
+            let name = $('#name').val()
+            let comment = $('#comment').val()
+
+            if (name == '' || comment == '') alert('이름과 할 말을 모두 입력하세요')
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: '/coosepost',
+                    data: {user:'syj', name_give: name, comment_give: comment},
+                    success: function (response) {
+                        //window.location.reload()
+                    }
+                })
+            }
+        }
+
+        function show_comment() {
+            $.ajax({
+                type: 'GET',
+                url: '/cooseget',
+                data: {user:'syj'},
+                success: function (response) {
+                    console.log(response);
+                    let rows = response['comment_list']
+                    for (let i = 0; i < rows.length; i++) {
+                        let name = rows[i]['name']
+                        let comment = rows[i]['comment']
+                        let temp_html = `<div class="card comments">
+                                            <div class="card-body">
+                                                <blockquote class="blockquote mb-0">
+                                                    <p>${comment}</p>
+                                                    <footer class="blockquote-footer">${name}</footer>
+                                                </blockquote>
+                                            </div>
+                                        </div>`
+                        $('#comment-list').append(temp_html)
+                    }
+                }
+            })
+        }
+    </script>
+</head>
+
+<body>
+
+<div class="header" onclick=location.href='/'> 메인페이지로 돌아가기</div>
+<p>
+<div class="start-screen font-outline"> 10조 쿠스 소개 페이지 <br> - 정성윤 -</div>
+<div class="main-content-1">
+    <div class="sticky-title">
+    </div>
+
+    <div class="sticky">
+        <div class="section">
+            <div class="title"> 1.소개</div>
+            <div class="content">
+                <div class="profile-card">
+                    <div class="card mb-3" style="max-width: 900px; margin: auto">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="../static/sy1.png" class="profile-img">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title" style="font-size:3vh; font-weight:bold"><br>정성윤 </h5>
+                                    <p class="card-text">
+                                        <br> <br> <br>
+                                        지금 하는 일: 웹 개발 공부 <br>
+                                        MBTI: INTP <br>
+                                        나의 장점: 끈기 있게 문제를 해결함 <br>
+                                        협업 시 스타일: 주어진 일에 최선을 다한다 <br>
+                                        취미: 게임, 음악 감상 <br>
+                                        BLOG: <a href="https://lalys.tistory.com/" target="_blank">https://lalys.tistory.com/</a>
+                                        <br>
+                                        GITHUB: <a href="https://github.com/lalyns/" target="_blank">https://github.com/lalyns/</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="title"> 2. 하고 싶은 말</div>
+            <div class="content font-outline" style="display:flex;
+                text-align: center; justify-content: center;
+                margin-top: 30vh; font-size:6vh; font-weight: bold; color:#FAFAFA;">
+                열심히 공부 하겠습니다!!!!
+            </div>
+        </div>
+        <div class="section">
+            <div class="title"> 3. 방명록 남기기</div>
+            <div class="content">
+                <div class="comment-box">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="name" placeholder="url">
+                        <label for="floatingInput">닉네임</label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="comment"></textarea>
+                        <label for="floatingTextarea2">방명록</label>
+                    </div>
+                    <button onclick="save_comment()" type="button" class="btn btn-dark"
+                            style="margin-top: 10px; margin-left: 20vw">
+                        방명록 남기기
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="title"> 4. 방명록</div>
+            <div class="content">
+                <div class="comment-container" id="comment-list">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</p>
+
+<script>
+    class FolderScroll {
+        constructor(wrapper, sticky) {
+            this.wrapper = wrapper
+            this.sticky = sticky
+            this.children = this.sticky.querySelectorAll('.section')
+            this.length = this.children.length
+            this.headerVh = 6
+            this.contentVh = 96 - this.headerVh * this.length
+            this.start = 0
+            this.end = 0
+        }
+
+        init() {
+            this.start = this.wrapper.offsetTop + 100
+            this.end = this.wrapper.offsetTop + this.wrapper.offsetHeight - innerHeight - 100
+
+            this.children.forEach((child, i) => {
+                child.style.bottom = -100 + this.headerVh * (this.length - i) + 'vh'
+                child.querySelector('.title').style.height = this.headerVh + 'vh'
+                child.querySelector('.content').style.height = this.contentVh + 'vh'
+            })
+        }
+
+        animate() {
+            this.children.forEach((child, i) => {
+                const unit = (this.end - this.start) / this.length
+                const s = this.start + unit * i + 100
+                const e = this.start + unit * (i + 1)
+
+                if (scrollY <= s) {
+                    child.style.transform = `translate3d(0, 0, 0)`
+                } else if (scrollY >= e) {
+                    child.style.transform = `translate3d(0, ${-this.contentVh}%, 0)`
+                } else {
+                    child.style.transform = `translate3d(0, ${(scrollY - s) / (unit - 100) * (-this.contentVh)}%, 0)`
+                }
+            })
+        }
+    }
+
+    const mainContent1 = document.querySelector('.main-content-1')
+    const sticky = document.querySelector('.sticky')
+    const folderScroll = new FolderScroll(mainContent1, sticky)
+    folderScroll.init()
+
+    window.addEventListener('resize', () => {
+        folderScroll.init()
+    })
+    window.addEventListener('scroll', () => {
+        folderScroll.animate()
+    })
+
+</script>
+
+</body>
+
+</html>
